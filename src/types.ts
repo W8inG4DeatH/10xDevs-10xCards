@@ -127,3 +127,39 @@ export interface FlashcardGenerationResponse {
  * Only the session_input is provided by the client; the user_id is added automatically server-side.
  */
 export type NewGenerationSessionInput = Pick<CreateGenerationSessionCommand, "session_input">;
+
+// ----------------------------------------------
+// Frontend types for flashcard generation view
+// ----------------------------------------------
+
+/**
+ * Rozszerzony model fiszki dla UI z decyzjami użytkownika
+ */
+export interface FlashcardWithDecision extends GeneratedFlashcard {
+  id: string; // Tymczasowe ID dla zarządzania w UI
+  status: FlashcardStatus; // Status decyzji: "draft", "approved" lub "rejected"
+  isEditing?: boolean; // Flaga wskazująca czy fiszka jest w trybie edycji
+}
+
+/**
+ * Model dla zapisania zatwierdzonych fiszek
+ */
+export interface FlashcardSubmissionViewModel {
+  session_id: number;
+  flashcards: {
+    front: string;
+    back: string;
+    source: FlashcardSource; // Zawsze "AI" w tym przypadku
+  }[];
+}
+
+/**
+ * Stan generowania fiszek
+ */
+export interface GenerationSessionViewModel {
+  isGenerating: boolean;
+  error: string | null;
+  sessionId: number | null;
+  inputText: string;
+  generatedAt: string | null;
+}

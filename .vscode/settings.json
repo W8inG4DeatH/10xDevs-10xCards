@@ -8,5 +8,6 @@
     "activityBar.background": "#2C2E24",
     "titleBar.activeBackground": "#3E4133",
     "titleBar.activeForeground": "#FBFBFA"
-  }
+  },
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
