@@ -1,14 +1,23 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { GenerationView } from "../components/GenerationView";
+
+// Check if user is authenticated (middleware will redirect if not)
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect("/auth/login");
+}
 ---
 
-<Layout title="Generate Flashcards">
-  <main class="container mx-auto px-4 py-8 max-w-4xl">
-    <h1 class="text-3xl font-bold mb-6">Generate Flashcards</h1>
-    <p class="mb-6 text-gray-700 dark:text-gray-300">
-      Enter your text below to automatically generate flashcards. You can review, edit, and save the generated cards.
-    </p>
+<Layout title="Generate Flashcards - 10x Cards">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold mb-4">Generate Flashcards</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+        Enter your text below to automatically generate flashcards. You can review, edit, and save the generated cards.
+      </p>
+    </div>
+
     <GenerationView client:load />
-  </main>
+  </div>
 </Layout>

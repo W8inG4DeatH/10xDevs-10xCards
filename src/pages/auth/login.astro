@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { LoginForm } from "../../components/auth/LoginForm";
+
+// Redirect if already logged in
+const { user } = Astro.locals;
+if (user) {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title="Sign In - 10x Cards">
+  <main
+    class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800"
+  >
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <a href="/" class="inline-block">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">10x Cards</h1>
+        </a>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Welcome back! Please sign in to your account.</p>
+      </div>
+
+      <LoginForm client:load />
+
+      <div class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p>
+          By signing in, you agree to our{" "}
+          <a href="/terms" class="text-primary hover:underline">Terms of Service</a>{" "}
+          and{" "}
+          <a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

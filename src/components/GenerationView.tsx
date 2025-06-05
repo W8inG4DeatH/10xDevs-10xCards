@@ -61,7 +61,6 @@ export function GenerationView() {
         <TextInputForm
           onSubmit={handleGenerateFlashcards}
           isLoading={isGenerating}
-          error={generationError}
           inputText={inputText}
           setInputText={setInputText}
         />

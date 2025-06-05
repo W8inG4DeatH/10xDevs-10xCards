@@ -16,6 +16,7 @@
     "@astrojs/sitemap": "3.3.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.1.2",
+    "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "4.0.17",
     "@types/react": "19.0.12",

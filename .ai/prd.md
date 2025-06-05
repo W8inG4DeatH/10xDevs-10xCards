@@ -152,7 +152,8 @@ Kryteria akceptacji:
 
    // project-prd.md
 
-# BACKEND
+
+# US z innego projektu jako wzór pomocniczy
 
 ## US-003: Kolekcje reguł
 

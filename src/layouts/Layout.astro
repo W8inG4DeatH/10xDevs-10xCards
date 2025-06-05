@@ -1,11 +1,34 @@
 ---
 import "../styles/global.css";
+import { AuthButton } from "../components/auth/AuthButton";
 
 interface Props {
   title?: string;
+  requireAuth?: boolean;
 }
 
-const { title = "10x Astro Starter" } = Astro.props;
+const { title = "10x Cards", requireAuth = false } = Astro.props;
+
+// Get user from middleware
+const user = Astro.locals.user;
+
+// Enhanced user state verification
+const isAuthenticated = Boolean(user);
+const userEmail = user?.email || "";
+
+// Redirect if authentication is required but user is not logged in
+if (requireAuth && !isAuthenticated) {
+  return Astro.redirect("/auth/login");
+}
+
+// Define navigation items based on authentication state
+const navigationItems = isAuthenticated
+  ? [
+      { href: "/generate", label: "Generate", icon: "🚀" },
+      { href: "/my-flashcards", label: "My Flashcards", icon: "📚" },
+      { href: "/study-session", label: "Study Session", icon: "🎯" },
+    ]
+  : [{ href: "/", label: "Home", icon: "🏠" }];
 ---
 
 <!doctype html>
@@ -18,7 +41,64 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <!-- Navigation Header -->
+    <header class="border-b bg-white/50 backdrop-blur dark:bg-gray-900/50 dark:border-gray-800">
+      <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-6">
+          <a href="/" class="text-xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors">
+            10x Cards
+          </a>
+
+          <!-- Dynamic Navigation based on authentication state -->
+          {
+            navigationItems.map((item) => (
+              <a
+                href={item.href}
+                class="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+              >
+                <span class="text-sm" role="img" aria-label={item.label}>
+                  {item.icon}
+                </span>
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+
+        <!-- Enhanced Auth Section -->
+        <div class="flex items-center gap-4">
+          {
+            isAuthenticated && (
+              <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-label="Online status" />
+                <span class="text-xs text-green-700 dark:text-green-300 font-medium">Signed in</span>
+              </div>
+            )
+          }
+
+          <AuthButton client:load user={user} />
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer for authenticated users -->
+    {
+      isAuthenticated && (
+        <footer class="border-t bg-gray-50 dark:bg-gray-900/50 dark:border-gray-800 mt-auto">
+          <div class="container mx-auto px-4 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+            <p>
+              Welcome back, <strong class="text-gray-900 dark:text-white">{userEmail}</strong>! Ready to boost your
+              learning?
+            </p>
+          </div>
+        </footer>
+      )
+    }
   </body>
 </html>
 
@@ -28,5 +108,28 @@ const { title = "10x Astro Starter" } = Astro.props;
     margin: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  /* Enhanced navigation styling */
+  nav a:hover {
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* Status indicator animation */
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 </style>
