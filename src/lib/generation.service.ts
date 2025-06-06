@@ -71,34 +71,102 @@ export class GenerationService {
   }
 
   /**
-   * Mock AI service for generating flashcards
+   * AI service for generating flashcards using OpenRouter API
    * @param input The text input to generate flashcards from
    * @returns Array of generated flashcards
    */
   private async callAIService(input: string): Promise<GeneratedFlashcard[]> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
     try {
-      // Mock flashcard generation based on input
-      // In a real implementation, this would call an external AI API
-      const wordCount = input.split(/\s+/).length;
-      const flashcardCount = Math.min(Math.max(3, Math.floor(wordCount / 50)), 10);
+      const apiKey = import.meta.env.OPENROUTER_API_KEY;
 
-      const mockFlashcards: GeneratedFlashcard[] = [];
-
-      // Generate mock flashcards based on input length
-      for (let i = 1; i <= flashcardCount; i++) {
-        mockFlashcards.push({
-          front: `Generated Question ${i} based on: ${input.substring(0, 20)}...`,
-          back: `Generated Answer ${i}: This is a simulated response for the question.`,
-        });
+      if (!apiKey) {
+        throw new Error("OPENROUTER_API_KEY is not configured");
       }
 
-      return mockFlashcards;
+      const prompt = `Based on the following text, generate educational flashcards. Create questions and answers that help understand the key concepts.
+
+Text: "${input}"
+
+Generate 3-5 flashcards in the following JSON format:
+[
+  {
+    "front": "Question about the concept",
+    "back": "Clear and concise answer"
+  }
+]
+
+Make sure the questions are specific and the answers are informative but concise. Focus on the most important concepts from the text.`;
+
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "http://localhost:3002",
+          "X-Title": "10x FlashCards Generator",
+        },
+        body: JSON.stringify({
+          model: "anthropic/claude-3.5-sonnet",
+          messages: [
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 1500,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`OpenRouter API error: ${response.status} - ${errorData}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0]?.message?.content;
+
+      if (!content) {
+        throw new Error("No content received from AI service");
+      }
+
+      // Try to extract JSON from the response
+      let flashcards: GeneratedFlashcard[];
+      try {
+        // Look for JSON array in the response
+        const jsonMatch = content.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          flashcards = JSON.parse(jsonMatch[0]);
+        } else {
+          // Fallback: try to parse the entire content as JSON
+          flashcards = JSON.parse(content);
+        }
+      } catch {
+        console.error("Failed to parse AI response as JSON:", content);
+        // Fallback to a single flashcard with the raw content
+        flashcards = [
+          {
+            front: "Generated question from input",
+            back: content.trim(),
+          },
+        ];
+      }
+
+      // Validate and ensure we have valid flashcard objects
+      const validFlashcards = flashcards
+        .filter((card) => card && typeof card.front === "string" && typeof card.back === "string")
+        .slice(0, 10); // Limit to max 10 cards
+
+      if (validFlashcards.length === 0) {
+        throw new Error("No valid flashcards generated from AI response");
+      }
+
+      return validFlashcards;
     } catch (error) {
       console.error("Error calling AI service:", error);
-      throw new Error("Failed to generate flashcards from AI service");
+      throw new Error(
+        `Failed to generate flashcards from AI service: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 }

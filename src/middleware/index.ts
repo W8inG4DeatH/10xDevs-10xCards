@@ -18,6 +18,8 @@ const PUBLIC_PATHS = [
   "/api/auth/reset-password",
   "/api/auth/update-password",
   "/api/auth/logout",
+  // Development endpoints
+  "/api/flashcards/generate",
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
