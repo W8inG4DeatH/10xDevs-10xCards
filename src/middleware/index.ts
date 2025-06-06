@@ -8,6 +8,7 @@ const PUBLIC_PATHS = [
   // Server-Rendered Astro Pages
   "/auth/login",
   "/auth/register",
+  "/auth/signup", // Alias for register
   "/auth/reset-password",
   "/auth/forgot-password",
   "/auth/logout",

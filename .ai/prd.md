@@ -152,7 +152,6 @@ Kryteria akceptacji:
 
    // project-prd.md
 
-
 # US z innego projektu jako wzór pomocniczy
 
 ## US-003: Kolekcje reguł

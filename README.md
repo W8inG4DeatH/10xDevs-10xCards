@@ -1,6 +1,7 @@
 # 10xDevs-10xCards
 
 ## Table of Contents
+
 - [Project Name](#project-name)
 - [Project Description](#project-description)
 - [Tech Stack](#tech-stack)
@@ -23,6 +24,10 @@
 - **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind CSS 4, Shadcn/ui
 - **Backend:** Supabase (PostgreSQL, authentication)
 - **AI Integration:** Openrouter.ai (access to various LLM models)
+- **Testing:**
+  - **Unit & Integration Tests:** Vitest, React Testing Library, MSW, Faker.js
+  - **End-to-End Tests:** Playwright (Chromium, Firefox, WebKit), @axe-core/playwright
+  - **Code Coverage:** c8, codecov
 - **CI/CD & Hosting:** GitHub Actions, DigitalOcean (Docker)
 
 ## Getting Started Locally
@@ -85,4 +90,4 @@ MVP (Minimum Viable Product) phase. The project is under active development with
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
