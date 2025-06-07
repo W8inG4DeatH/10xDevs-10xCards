@@ -18,7 +18,7 @@ const gitignorePath = path.resolve(__dirname, ".gitignore");
 const baseConfig = tseslint.config({
   extends: [eslint.configs.recommended, tseslint.configs.strict, tseslint.configs.stylistic],
   rules: {
-    "no-console": "warn",
+    "no-console": ["error", { allow: ["error", "warn"] }],
     "no-unused-vars": "off",
   },
 });
@@ -62,5 +62,13 @@ export default tseslint.config(
   jsxA11yConfig,
   reactConfig,
   eslintPluginAstro.configs["flat/recommended"],
-  eslintPluginPrettier
+  eslintPluginPrettier,
+  {
+    files: ["tests/**/*", "**/*.test.*", "**/*.spec.*"],
+    rules: {
+      "no-console": "off",
+      "@typescript-eslint/no-useless-constructor": "off",
+      "@typescript-eslint/no-empty-function": "off",
+    },
+  }
 );

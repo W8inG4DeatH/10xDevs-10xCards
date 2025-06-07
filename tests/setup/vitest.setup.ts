@@ -53,7 +53,9 @@ Object.defineProperty(window, "matchMedia", {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
+  constructor() {
+    // Mock constructor - required for IntersectionObserver API
+  }
   observe() {
     return null;
   }

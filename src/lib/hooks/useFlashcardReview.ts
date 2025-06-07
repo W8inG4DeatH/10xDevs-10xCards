@@ -76,7 +76,10 @@ export function useFlashcardReview(sessionData: FlashcardGenerationResponse | nu
 
       // Success - could redirect to My Flashcards page
       const result = await response.json();
-      console.log(`Successfully saved ${result.count} flashcards`);
+      // Successfully saved flashcards - could be logged to analytics instead
+      if (result.count > 0) {
+        // Flashcards were saved successfully
+      }
 
       // Optionally redirect to My Flashcards
       // window.location.href = "/my-flashcards";
