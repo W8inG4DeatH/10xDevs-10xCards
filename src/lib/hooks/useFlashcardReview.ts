@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { FlashcardGenerationResponse, FlashcardStatus, FlashcardWithDecision, FlashcardSource } from "../../types";
+import type { FlashcardGenerationResponse, FlashcardStatus, FlashcardWithDecision } from "../../types";
 
 export function useFlashcardReview(sessionData: FlashcardGenerationResponse | null) {
   const [flashcards, setFlashcards] = useState<FlashcardWithDecision[]>([]);
@@ -58,15 +58,13 @@ export function useFlashcardReview(sessionData: FlashcardGenerationResponse | nu
     setSaveError(null);
 
     try {
-      const response = await fetch("/api/flashcards", {
+      const response = await fetch("/api/flashcards/approve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          session_id: sessionData.session_id,
           flashcards: approvedCards.map((card) => ({
             front: card.front,
             back: card.back,
-            source: "AI" as FlashcardSource,
           })),
         }),
       });
@@ -76,7 +74,12 @@ export function useFlashcardReview(sessionData: FlashcardGenerationResponse | nu
         throw new Error(errorData.message || "Failed to save flashcards");
       }
 
-      // Success - could add additional handling (e.g., redirect or message)
+      // Success - could redirect to My Flashcards page
+      const result = await response.json();
+      console.log(`Successfully saved ${result.count} flashcards`);
+
+      // Optionally redirect to My Flashcards
+      // window.location.href = "/my-flashcards";
     } catch (err) {
       if (err instanceof Error) {
         setSaveError(err.message);

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Save } from "lucide-react";
+import { Save, Eye } from "lucide-react";
 
 interface ActionBarProps {
   approvedCount: number;
@@ -15,19 +15,26 @@ export function ActionBar({ approvedCount, onSave, isLoading }: ActionBarProps) 
         <span className="font-medium">{approvedCount}</span> flashcard{approvedCount !== 1 ? "s" : ""} approved
       </div>
 
-      <Button onClick={onSave} disabled={isLoading || approvedCount === 0} className="min-w-[200px]">
-        {isLoading ? (
-          <>
-            <div className="h-4 w-4 rounded-full border-2 border-t-transparent border-white animate-spin mr-2"></div>
-            Saving...
-          </>
-        ) : (
-          <>
-            <Save className="h-4 w-4 mr-2" />
-            Save Approved Flashcards
-          </>
-        )}
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={() => (window.location.href = "/my-flashcards")}>
+          <Eye className="h-4 w-4 mr-2" />
+          View My Flashcards
+        </Button>
+
+        <Button onClick={onSave} disabled={isLoading || approvedCount === 0} className="min-w-[200px]">
+          {isLoading ? (
+            <>
+              <div className="h-4 w-4 rounded-full border-2 border-t-transparent border-white animate-spin mr-2"></div>
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4 mr-2" />
+              Save Approved Flashcards
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

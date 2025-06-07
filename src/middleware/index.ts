@@ -20,6 +20,8 @@ const PUBLIC_PATHS = [
   "/api/auth/logout",
   // Development endpoints
   "/api/flashcards/generate",
+  "/api/flashcards",
+  "/api/flashcards/approve",
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
