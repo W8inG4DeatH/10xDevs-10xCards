@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import StudySession from "../components/StudySession";
+---
+
+<Layout title="Study Flashcards">
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold mb-2">Study Flashcards</h1>
+        <p class="text-gray-600">Practice your flashcards with spaced repetition</p>
+      </div>
+      <StudySession client:load />
+    </div>
+  </main>
+</Layout>
